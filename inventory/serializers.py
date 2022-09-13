@@ -21,7 +21,14 @@ class ItemSerializer(serializers.ModelSerializer):
         # depth = 2
 
 
-class PurchaseDSerializer(serializers.ModelSerializer):
+class PurchaseListSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Purchase
+        fields = ['id', 'code', 'date']
+
+
+class PurchaseDCreateUpdateSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(required=False)
     item = serializers.PrimaryKeyRelatedField(
         queryset=Item.objects.all(),
@@ -32,24 +39,8 @@ class PurchaseDSerializer(serializers.ModelSerializer):
         fields = ['id', 'item', 'quantity', 'unit_price',]        
 
 
-class PurchaseDWithItemSerializer(serializers.ModelSerializer):
-    
-    item = ItemSerializer(read_only=True)
-
-    class Meta:
-        model = PurchaseD
-        fields = ['id', 'item', 'quantity', 'unit_price',]
-
-
-class PurchaseSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Purchase
-        fields = ['id', 'code', 'date']
-
-
-class PurchaseWithDetailsSerializer(serializers.ModelSerializer):
-    details = PurchaseDSerializer(many=True)
+class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
+    details = PurchaseDCreateUpdateSerializer(many=True)
 
     class Meta:
         model = Purchase
@@ -63,7 +54,7 @@ class PurchaseWithDetailsSerializer(serializers.ModelSerializer):
         return purchase
 
     def update(self, instance, validated_data):
-        print('update: ', repr(validated_data))
+        # print('update: ', repr(validated_data))
         details_data = validated_data.pop('details')
 
         for key, value in validated_data.items():
@@ -96,9 +87,94 @@ class PurchaseWithDetailsSerializer(serializers.ModelSerializer):
         return instance
 
 
-class PurchaseWithDetailsReadSerializer(serializers.ModelSerializer):
-    details = PurchaseDWithItemSerializer(many=True, read_only=True)
+class PurchaseDRetrieveSerializer(serializers.ModelSerializer):
+    
+    item = ItemSerializer(read_only=True)
+
+    class Meta:
+        model = PurchaseD
+        fields = ['id', 'item', 'quantity', 'unit_price',]
+
+
+class PurchaseRetrieveSerializer(serializers.ModelSerializer):
+    details = PurchaseDRetrieveSerializer(many=True, read_only=True)
 
     class Meta:
         model = Purchase
+        fields = ['id', 'code', 'date', 'details']
+
+
+class SellListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Sell
+        fields = ['id', 'code', 'date']
+
+
+class SellDCreateUpdateSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(required=False)
+    item = serializers.PrimaryKeyRelatedField(
+        queryset=Item.objects.all(),
+    )
+
+    class Meta:
+        model = SellD
+        fields = ['id', 'item', 'quantity', 'unit_price',]
+
+
+class SellCreateUpdateSerializer(serializers.ModelSerializer):
+    details = SellDCreateUpdateSerializer(many=True)
+    class Meta:
+        model = Sell
+        fields = ['id', 'code', 'date', 'details']
+
+    def create(self, validated_data):
+        details_data = validated_data.pop('details')
+        sell = Sell.objects.create(**validated_data)
+        for row in details_data:            
+            SellD.objects.create(sell=sell, **row)
+        return sell
+
+    def update(self, instance, validated_data):
+        details_data = validated_data.pop('details')
+
+        for key, value in validated_data.items():
+            setattr(instance, key, value)
+
+        existing_rows = {
+            row.id: row
+            for row in SellD.objects.filter(sell=instance).all()
+        }
+        
+        for row in details_data:
+            if 'id' in row:
+                sell_d = existing_rows.pop(row['id'])
+
+                for key, value in row.items():
+                    setattr(sell_d, key, value)
+
+                sell_d.save()
+            else:
+                SellD.objects.create(sell=instance, **row)
+
+        # delete remaining existing_rows
+        for sell_d in existing_rows.values():
+            sell_d.delete()
+
+        instance.save()
+        return instance
+
+
+class SellDRetriveSerializer(serializers.ModelSerializer):
+    item = ItemSerializer(read_only=True)
+
+    class Meta:
+        model = SellD
+        fields = ['id', 'item', 'quantity', 'unit_price',]
+
+
+class SellRetriveSerializer(serializers.ModelSerializer):
+    details = SellDRetriveSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Sell
         fields = ['id', 'code', 'date', 'details']

@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.utils import timezone
 from .models import ItemCategory, Item, Purchase, PurchaseD
-from .serializers import PurchaseWithDetailsSerializer
+from .serializers import PurchaseCreateUpdateSerializer
 
 
 class PurchaseTest(TestCase):
@@ -30,7 +30,7 @@ class PurchaseTest(TestCase):
                 ),
             ]
         )
-        serializer = PurchaseWithDetailsSerializer(purchase, data=data)
+        serializer = PurchaseCreateUpdateSerializer(purchase, data=data)
         self.assertTrue(serializer.is_valid(), repr(serializer.errors))
         serializer.save()
         print(repr(serializer.validated_data))
