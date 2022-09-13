@@ -1,0 +1,7 @@
+django
+djangorestframework
+markdown
+django-filter
+cryptography
+django-rest-knox
+python-decouple
