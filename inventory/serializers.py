@@ -1,5 +1,5 @@
-from wsgiref import validate
-from rest_framework import serializers
+from typing import Dict, Any
+from rest_framework import serializers, exceptions
 from .models import ItemCategory, Item, Purchase, PurchaseD, Sell, SellD
 
 
@@ -46,14 +46,14 @@ class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
         model = Purchase
         fields = ['id', 'code', 'date', 'details']
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
         purchase = Purchase.objects.create(**validated_data)
         for row in details_data:            
             PurchaseD.objects.create(purchase=purchase, **row)
         return purchase
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Purchase, validated_data: Dict[str, Any]):
         # print('update: ', repr(validated_data))
         details_data = validated_data.pop('details')
 
@@ -66,10 +66,12 @@ class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
         }
         
         for row in details_data:
-            if 'id' in row:
-                # if row['id'] not in existing_rows:
-                #     raise ValueError('id {} is not valid'.format(row['id']))
-                purchase_d = existing_rows.pop(row['id'])
+            if 'id' in row:                
+                try:
+                    purchase_d = existing_rows.pop(row['id'])
+                except KeyError:
+                    raise exceptions.ValidationError('Purchase detail with id {} is not available'.format(row['id']))
+
                 for key, value in row.items():
                     setattr(purchase_d, key, value)
                 # purchase_d.item = row.get('item', purchase_d.item)
@@ -127,27 +129,33 @@ class SellCreateUpdateSerializer(serializers.ModelSerializer):
         model = Sell
         fields = ['id', 'code', 'date', 'details']
 
-    def create(self, validated_data):
+    def create(self, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
         sell = Sell.objects.create(**validated_data)
         for row in details_data:            
             SellD.objects.create(sell=sell, **row)
         return sell
 
-    def update(self, instance, validated_data):
+    def update(self, instance: Sell, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
 
+        # set remaining validated_data values into instance attribute
         for key, value in validated_data.items():
             setattr(instance, key, value)
 
+        # existing rows into dictionary with the id as the key
         existing_rows = {
             row.id: row
-            for row in SellD.objects.filter(sell=instance).all()
+            for row in instance.details.all()
+            # for row in SellD.objects.filter(sell=instance).all()
         }
         
         for row in details_data:
             if 'id' in row:
-                sell_d = existing_rows.pop(row['id'])
+                try:
+                    sell_d = existing_rows.pop(row['id'])
+                except KeyError:
+                    raise exceptions.ValidationError('Sell detail with id {} is not available'.format(row['id']))
 
                 for key, value in row.items():
                     setattr(sell_d, key, value)
