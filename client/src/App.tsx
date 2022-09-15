@@ -8,6 +8,7 @@ import Navbar from './components/Navbar'
 import { authStateAtom } from './components/auth'
 
 const ItemPage = lazy(() => import('./pages/Item'))
+const ItemCreatePage = lazy(() => import('./pages/ItemCreate'))
 
 const App = () => (
   <ChakraProvider>
@@ -19,11 +20,18 @@ const App = () => (
               <Route index element={
                 <div>Home Page</div>
               } />
-              <Route path="item" element={
-                <RequiredAuth>
-                  <ItemPage/>
-                </RequiredAuth>
-              }/>
+              <Route path="item">
+                <Route index element={
+                  <RequiredAuth>
+                    <ItemPage/>
+                  </RequiredAuth>
+                }/>
+                <Route path="create" element={
+                  <RequiredAuth>
+                    <ItemCreatePage/>
+                  </RequiredAuth>
+                }/>
+              </Route>
               <Route path="login">
                 <Route index element={<LoginPage />}></Route>
               </Route>

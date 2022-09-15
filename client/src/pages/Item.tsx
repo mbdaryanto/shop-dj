@@ -1,10 +1,11 @@
-import { Button, CircularProgress, HStack, Table, Tbody, Td, Text, Th, Thead, Tr, useToast, VStack } from "@chakra-ui/react"
+import { Button, CircularProgress, Heading, HStack, IconButton, Table, Tbody, Td, Text, Th, Thead, Tr, useToast, VStack } from "@chakra-ui/react"
 import { useEffect, useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
+import { FaPlus as AddIcon } from "react-icons/fa"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail, PagedResponse } from "../components/common"
-import { getItemList, ItemType } from "../components/items"
+import { getItemList, ItemType } from "../components/items-api"
 import SearchBox from "../components/SearchBox"
 
 
@@ -72,6 +73,23 @@ function ItemPage() {
 
   return (
     <VStack spacing={4} w="100%">
+      <Heading textAlign="left" mb={5}>
+        Item
+      </Heading>
+      <IconButton
+        aria-label="Create New Item"
+        icon={<AddIcon />}
+        title="Create New Item"
+        position="fixed"
+        zIndex={3}
+        borderRadius="50%"
+        right="100px"
+        bottom="30px"
+        boxShadow="md"
+        colorScheme="blue"
+        as={Link}
+        to="/item/create"
+      />
       <SearchBox search={searchParams.get('search') ?? ''} onSearch={async (query) => {
         setSearchParams(query ? { search: query } : {})
       }}/>
