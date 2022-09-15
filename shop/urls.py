@@ -25,4 +25,5 @@ urlpatterns = [
     path('logoutall/', knox_views.LogoutAllView.as_view(), name='knox_logoutall'),
     path('user/profile/', views.user_profile, name='user_profile'),
     path('inventory/', include('inventory.urls')),
+    path('', views.home, name='home'),
 ]
