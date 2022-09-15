@@ -32,7 +32,7 @@ function ItemCreatePage() {
             category: '',
             notes: ''
           }}
-          onSubmit={async (values, { setSubmitting, setErrors }) => {
+          onSubmit={async (values, { setErrors }) => {
             try {
               const savedItem = await createItem(axios, values as ItemType)
               toast({
@@ -55,7 +55,7 @@ function ItemCreatePage() {
                   toast({
                     status: "error",
                     title: "Saving Item failed",
-                    description: "Please fix submitted fields " + errorFields.join(", "),
+                    description: "Please fix following fields " + errorFields.join(", "),
                   })
                 } else {
                   toast({
