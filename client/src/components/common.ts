@@ -1,5 +1,13 @@
 import { AxiosError } from "axios"
 
+
+export interface PagedResponse<T> {
+  count: number
+  next: string | null
+  previous: string | null
+  results: T
+}
+
 export interface ErrorResponse {
   detail?: string | any
   non_field_errors?: string[]

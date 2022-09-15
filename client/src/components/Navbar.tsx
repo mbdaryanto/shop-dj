@@ -12,13 +12,13 @@ import { getAxiosErrorDetail } from './common'
 
 const menus = [
   {
-    children: 'Master',
-    to: '/master',
+    children: 'Item',
+    to: '/item',
   },
-  {
-    children: 'Transaksi',
-    to: '/transaksi'
-  },
+  // {
+  //   children: 'Transaksi',
+  //   to: '/transaksi'
+  // },
 ]
 
 const NavLink = (props: { children: ReactNode, to: string }) => (
@@ -55,7 +55,7 @@ const Navbar = ({
       <Box
         pos="fixed" top="0" w="100%" h={`${NAVBAR_HEIGHT}px`} pt={2} pb={2} pl={5} pr={5} zIndex={3}
         display="flex" justifyContent="center" alignItems="center"
-        bg={useColorModeValue('white', 'gray.800')}
+        bg={useColorModeValue('gray.100', 'gray.800')}
         color={useColorModeValue('gray.600', 'white')}
         borderBottom={1}
         borderStyle={'solid'}
@@ -151,7 +151,7 @@ const Navbar = ({
         minH="100vh"
       >
         <Box
-          pt={2 + NAVBAR_HEIGHT}
+          pt={`${NAVBAR_HEIGHT + 8}px`}
           pb={2}
           px={{ base: 0, md: 5 }}
           // w={{ base: "100%", md: "1100px" }}
@@ -161,7 +161,7 @@ const Navbar = ({
           display="flex"
           alignItems="start"
           justifyContent="center"
-          bgColor="whitesmoke"
+          bgColor="white"
         >
           {children}
         </Box>

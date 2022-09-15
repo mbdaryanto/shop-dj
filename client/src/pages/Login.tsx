@@ -1,5 +1,4 @@
 import { Box, Button, FormControl, FormErrorMessage, FormLabel, Heading, Input, VStack, useToast } from '@chakra-ui/react'
-import { AxiosError } from 'axios'
 import { Field, FieldProps, Form, Formik } from 'formik'
 import { Location, useLocation, useNavigate } from "react-router-dom"
 import { useSetRecoilState } from 'recoil'
@@ -54,7 +53,7 @@ function Login() {
             toast({
               status: "error",
               title: "Login Failed",
-              description: getAxiosErrorDetail(error as AxiosError),
+              description: getAxiosErrorDetail(error),
             })
           }
           setSubmitting(false)

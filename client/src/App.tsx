@@ -1,5 +1,5 @@
 import { Center, ChakraProvider, CircularProgress } from '@chakra-ui/react'
-import { Suspense } from 'react'
+import { Suspense, lazy } from 'react'
 import { HashRouter as Router, Routes, Route, Outlet, Navigate, useLocation } from 'react-router-dom'
 import { RecoilRoot, useRecoilValue } from 'recoil'
 import ErrorBoundary from './components/ErrorBoundary'
@@ -7,6 +7,7 @@ import LoginPage from './pages/Login'
 import Navbar from './components/Navbar'
 import { authStateAtom } from './components/auth'
 
+const ItemPage = lazy(() => import('./pages/Item'))
 
 const App = () => (
   <ChakraProvider>
@@ -20,7 +21,7 @@ const App = () => (
               } />
               <Route path="item" element={
                 <RequiredAuth>
-                  <div>Item Page</div>
+                  <ItemPage/>
                 </RequiredAuth>
               }/>
               <Route path="login">
