@@ -7,6 +7,7 @@ import LoginPage from './pages/Login'
 import Navbar from './components/Navbar'
 import { authStateAtom } from './components/auth'
 
+const HomePage = lazy(() => import('./pages/Home'))
 const ComingSoonPage = lazy(() => import('./pages/ComingSoon'))
 
 const ItemPage = lazy(() => import('./pages/Item'))
@@ -14,6 +15,8 @@ const ItemCreatePage = lazy(() => import('./pages/ItemCreate'))
 const ItemUpdatePage = lazy(() => import('./pages/ItemUpdate'))
 
 const PurchasePage = lazy(() => import('./pages/Purchase'))
+const PurchaseCreatePage = lazy(() => import('./pages/PurchaseCreate'))
+const PurchaseUpdatePage = lazy(() => import('./pages/PurchaseUpdate'))
 
 const App = () => (
   <ChakraProvider>
@@ -23,7 +26,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<MainLayout />}>
               <Route index element={
-                <div>Home Page</div>
+                <HomePage/>
               } />
               <Route path="item">
                 <Route index element={
@@ -50,12 +53,12 @@ const App = () => (
                 }/>
                  <Route path="create" element={
                   <RequiredAuth>
-                    <ComingSoonPage/>
+                    <PurchaseCreatePage/>
                   </RequiredAuth>
                 }/>
                 <Route path=":id/update" element={
                   <RequiredAuth>
-                    <ComingSoonPage/>
+                    <PurchaseUpdatePage/>
                   </RequiredAuth>
                 }/>
               </Route>

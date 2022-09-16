@@ -7,6 +7,7 @@ import { getAxiosErrorDetail, PagedResponse } from "../components/common"
 import { getItemList, ItemType } from "../components/items-api"
 import { AddIcon, EditIcon, DeleteIcon } from "../components/Icons"
 import SearchBox from "../components/SearchBox"
+import ItemTable from "../components/ItemTable"
 
 
 function ItemPage() {
@@ -103,7 +104,7 @@ function ItemPage() {
         </HStack>
       ) : (
         <>
-          <ItemList items={items}/>
+          <ItemTable items={items}/>
           {nextUrl && (
             <Button onClick={loadNext} isLoading={isLoadingNext}>Load Next...</Button>
           )}
@@ -112,43 +113,5 @@ function ItemPage() {
     </VStack>
   )
 }
-
-const ItemList = ({ items }: {
-  items: ItemType[]
-}) => (
-  <Table>
-    <Thead>
-      <Tr>
-        <Th>Barcode</Th>
-        <Th>Name</Th>
-        <Th>Unit Price</Th>
-        <Th>Category</Th>
-        <Th></Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-      {items.map((item) => (
-        <Tr key={item.id}>
-          <Td>{item.barcode}</Td>
-          <Td>{item.name}</Td>
-          <Td>{item.unit_price}</Td>
-          <Td>{item.category}</Td>
-          <Td>
-            <IconButton
-              aria-label="Update Item"
-              title="Update Item"
-              icon={<EditIcon/>}
-              as={Link}
-              to={`/item/${item.id}/update`}
-              variant="link"
-            />
-          </Td>
-        </Tr>
-      ))}
-    </Tbody>
-  </Table>
-)
-
-
 
 export default ItemPage

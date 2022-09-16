@@ -2,11 +2,11 @@ import { Button, CircularProgress, Heading, HStack, IconButton, Table, Tbody, Td
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
-import { FaEdit, FaPlus as AddIcon } from "react-icons/fa"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail, PagedResponse } from "../components/common"
 import { getPurchaseList, PurchaseType } from "../components/purchase-api"
 import SearchBox from "../components/SearchBox"
+import { EditIcon, AddIcon } from "../components/Icons"
 
 
 function PurchasePage() {
@@ -126,14 +126,14 @@ const PurchaseTable = ({ list }: {
     </Thead>
     <Tbody>
       {list.map((row) => (
-        <Tr key={row.id}>
+        <Tr key={row.id} _hover={{ bgColor: 'blue.100' }}>
           <Td>{row.code}</Td>
           <Td>{row.date}</Td>
           <Td>
             <IconButton
               aria-label="Update"
               title="Update"
-              icon={<FaEdit/>}
+              icon={<EditIcon/>}
               as={Link}
               to={`/purchase/${row.id}/update`}
               variant="link"

@@ -1,7 +1,9 @@
 import { AxiosInstance } from "axios"
+import { roundToNearestMinutesWithOptions } from "date-fns/fp"
 import { object, string, number, date, array, Asserts } from "yup"
 import { PagedResponse } from "./common"
-import { ItemType } from "./items-api"
+import { formatDate } from "./DatePicker"
+import { itemSchema, ItemType } from "./items-api"
 
 export interface PurchaseType {
   id?: number
@@ -11,18 +13,15 @@ export interface PurchaseType {
 
 export const purchaseDCreateUpdateSchema = object({
   id: number().integer().optional(),
-  item: number().integer(),
+  _id: string().optional(),
+  item: itemSchema.required(),
   quantity: number().required().min(0),
   unit_price: number().required().min(0),
 })
 
-export const purchaseSchema = object({
-  id: number().integer().optional(),
+export const purchaseCreateUpdateSchema = object({
   code: string().required().max(30),
   date: date().required(),
-})
-
-export const purchaseCreateUpdateSchema = purchaseSchema.shape({
   details: array().of(purchaseDCreateUpdateSchema).ensure(),
 })
 
@@ -33,7 +32,7 @@ interface PurchaseDRetrieveType {
   unit_price: number,
 }
 
-interface PurchaseRetrieveType extends PurchaseType {
+export interface PurchaseRetrieveType extends PurchaseType {
   details: PurchaseDRetrieveType[]
 }
 
@@ -42,8 +41,14 @@ export async function getPurchaseList(axios: AxiosInstance, searchParams: URLSea
   return response.data
 }
 
+const purchaseDataFormat = ({ details, date, ...restPurchase }: Asserts<typeof purchaseCreateUpdateSchema>) => ({
+  ...restPurchase,
+  'date': formatDate(date),
+  'details': details.map(({ item, ...restDetail }) => ({ ...restDetail, 'item': item.id}))
+})
+
 export async function createPurchase(axios: AxiosInstance, purchase: Asserts<typeof purchaseCreateUpdateSchema>): Promise<Asserts<typeof purchaseCreateUpdateSchema>> {
-  const response = await axios.post<Asserts<typeof purchaseCreateUpdateSchema>>('/inventory/purchase/', purchase)
+  const response = await axios.post<Asserts<typeof purchaseCreateUpdateSchema>>('/inventory/purchase/', purchaseDataFormat(purchase))
   console.log(response.data)
   return response.data
 }
@@ -54,7 +59,7 @@ export async function getPurchaseById(axios: AxiosInstance, id: string | number)
 }
 
 export async function updatePurchase(axios: AxiosInstance, id: string | number, purchase: Asserts<typeof purchaseCreateUpdateSchema>): Promise<Asserts<typeof purchaseCreateUpdateSchema>> {
-  const response = await axios.put<Asserts<typeof purchaseCreateUpdateSchema>>(`/inventory/purchase/${id}/`, purchase)
+  const response = await axios.put<Asserts<typeof purchaseCreateUpdateSchema>>(`/inventory/purchase/${id}/`, purchaseDataFormat(purchase))
   return response.data
 }
 
