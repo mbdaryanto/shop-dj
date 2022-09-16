@@ -2,18 +2,18 @@ import { Button, CircularProgress, Heading, HStack, IconButton, Table, Tbody, Td
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
+import { FaEdit, FaPlus as AddIcon } from "react-icons/fa"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail, PagedResponse } from "../components/common"
-import { getItemList, ItemType } from "../components/items-api"
-import { AddIcon, EditIcon, DeleteIcon } from "../components/Icons"
+import { getPurchaseList, PurchaseType } from "../components/purchase-api"
 import SearchBox from "../components/SearchBox"
 
 
-function ItemPage() {
+function PurchasePage() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [isLoading, setLoading] = useState(false)
   const [isLoadingNext, setLoadingNext] = useState(false)
-  const [items, setItems] = useState<ItemType[]>([])
+  const [list, setList] = useState<PurchaseType[]>([])
   const [nextUrl, setNextUrl] = useState<string | null>(null)
   const axios = useRecoilValue(authAxios)
   const toast = useToast()
@@ -21,11 +21,11 @@ function ItemPage() {
   useEffect(() => {
     let isMounted = true
     setLoading(true)
-    getItemList(axios, searchParams).then(
+    getPurchaseList(axios, searchParams).then(
       (result) => {
         if (!isMounted) return
-        // set items from results
-        setItems(result.results)
+        // set list from results
+        setList(result.results)
         // update next url
         setNextUrl(result.next)
         setLoading(false)
@@ -55,9 +55,9 @@ function ItemPage() {
     try {
       setLoadingNext(true)
       const response = await axios.get(nextUrl!)
-      const result = response.data as PagedResponse<ItemType[]>
-      // append new fetched item to the end of the list
-      setItems((prev) => [...prev, ...result.results])
+      const result = response.data as PagedResponse<PurchaseType[]>
+      // append new fetched records to the end of the list
+      setList((prev) => [...prev, ...result.results])
       // update next url
       setNextUrl(result.next)
     } catch (error) {
@@ -74,12 +74,12 @@ function ItemPage() {
   return (
     <VStack spacing={4} w="100%">
       <Heading textAlign="left" mb={5}>
-        Item
+        Purchase
       </Heading>
       <IconButton
-        aria-label="Create New Item"
+        aria-label="Create New Purchase"
         icon={<AddIcon />}
-        title="Create New Item"
+        title="Create New Purchase"
         position="fixed"
         zIndex={3}
         borderRadius="50%"
@@ -88,7 +88,7 @@ function ItemPage() {
         boxShadow="md"
         colorScheme="blue"
         as={Link}
-        to="/item/create"
+        to="/purchase/create"
       />
       <SearchBox search={searchParams.get('search') ?? ''} onSearch={async (query) => {
         setSearchParams(query ? { search: query } : {})
@@ -103,7 +103,7 @@ function ItemPage() {
         </HStack>
       ) : (
         <>
-          <ItemList items={items}/>
+          <PurchaseTable list={list}/>
           {nextUrl && (
             <Button onClick={loadNext} isLoading={isLoadingNext}>Load Next...</Button>
           )}
@@ -113,33 +113,29 @@ function ItemPage() {
   )
 }
 
-const ItemList = ({ items }: {
-  items: ItemType[]
+const PurchaseTable = ({ list }: {
+  list: PurchaseType[]
 }) => (
   <Table>
     <Thead>
       <Tr>
-        <Th>Barcode</Th>
-        <Th>Name</Th>
-        <Th>Unit Price</Th>
-        <Th>Category</Th>
+        <Th>Code</Th>
+        <Th>Date</Th>
         <Th></Th>
       </Tr>
     </Thead>
     <Tbody>
-      {items.map((item) => (
-        <Tr key={item.id}>
-          <Td>{item.barcode}</Td>
-          <Td>{item.name}</Td>
-          <Td>{item.unit_price}</Td>
-          <Td>{item.category}</Td>
+      {list.map((row) => (
+        <Tr key={row.id}>
+          <Td>{row.code}</Td>
+          <Td>{row.date}</Td>
           <Td>
             <IconButton
-              aria-label="Update Item"
-              title="Update Item"
-              icon={<EditIcon/>}
+              aria-label="Update"
+              title="Update"
+              icon={<FaEdit/>}
               as={Link}
-              to={`/item/${item.id}/update`}
+              to={`/purchase/${row.id}/update`}
               variant="link"
             />
           </Td>
@@ -151,4 +147,4 @@ const ItemList = ({ items }: {
 
 
 
-export default ItemPage
+export default PurchasePage

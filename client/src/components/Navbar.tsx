@@ -15,10 +15,10 @@ const menus = [
     children: 'Item',
     to: '/item',
   },
-  // {
-  //   children: 'Transaksi',
-  //   to: '/transaksi'
-  // },
+  {
+    children: 'Purchase',
+    to: '/purchase'
+  },
 ]
 
 const NavLink = (props: { children: ReactNode, to: string }) => (

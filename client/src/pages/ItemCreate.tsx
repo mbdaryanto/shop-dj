@@ -1,12 +1,12 @@
 import { Heading, HStack, IconButton, useToast, VStack } from "@chakra-ui/react"
 import { AxiosError } from "axios"
 import { Formik } from "formik"
-import { FaArrowLeft as BackIcon } from "react-icons/fa"
 import { useNavigate } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail } from "../components/common"
 import { createItem, itemSchema } from "../components/items-api"
+import { BackIcon } from "../components/Icons"
 import { ItemForm } from "./ItemForm"
 
 function ItemCreatePage() {

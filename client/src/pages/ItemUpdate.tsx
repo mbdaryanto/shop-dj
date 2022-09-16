@@ -2,12 +2,12 @@ import { Center, CircularProgress, Heading, HStack, IconButton, useToast, VStack
 import { AxiosError } from "axios"
 import { Formik } from "formik"
 import { useEffect, useState } from "react"
-import { FaArrowLeft as BackIcon } from "react-icons/fa"
 import { useNavigate, useParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail } from "../components/common"
 import { getItemById, itemSchema, ItemType, updateItem } from "../components/items-api"
+import { BackIcon } from "../components/Icons"
 import { ItemForm } from "./ItemForm"
 
 function ItemUpdatePage() {
@@ -32,7 +32,9 @@ function ItemUpdatePage() {
         setItem(undefined)
         setLoading(false)
         toast({
-
+          status: "error",
+          title: "Error Loading",
+          description: getAxiosErrorDetail(error)
         })
       }
     )
