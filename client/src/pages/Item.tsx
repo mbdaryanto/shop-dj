@@ -2,7 +2,7 @@ import { Button, CircularProgress, Heading, HStack, IconButton, Table, Tbody, Td
 import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
-import { FaPlus as AddIcon } from "react-icons/fa"
+import { FaEdit, FaPlus as AddIcon } from "react-icons/fa"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail, PagedResponse } from "../components/common"
 import { getItemList, ItemType } from "../components/items-api"
@@ -123,6 +123,7 @@ const ItemList = ({ items }: {
         <Th>Name</Th>
         <Th>Unit Price</Th>
         <Th>Category</Th>
+        <Th></Th>
       </Tr>
     </Thead>
     <Tbody>
@@ -132,6 +133,16 @@ const ItemList = ({ items }: {
           <Td>{item.name}</Td>
           <Td>{item.unit_price}</Td>
           <Td>{item.category}</Td>
+          <Td>
+            <IconButton
+              aria-label="Update Item"
+              title="Update Item"
+              icon={<FaEdit/>}
+              as={Link}
+              to={`/item/${item.id}/update`}
+              variant="link"
+            />
+          </Td>
         </Tr>
       ))}
     </Tbody>

@@ -9,6 +9,7 @@ import { authStateAtom } from './components/auth'
 
 const ItemPage = lazy(() => import('./pages/Item'))
 const ItemCreatePage = lazy(() => import('./pages/ItemCreate'))
+const ItemUpdatePage = lazy(() => import('./pages/ItemUpdate'))
 
 const App = () => (
   <ChakraProvider>
@@ -29,6 +30,11 @@ const App = () => (
                 <Route path="create" element={
                   <RequiredAuth>
                     <ItemCreatePage/>
+                  </RequiredAuth>
+                }/>
+                <Route path=":id/update" element={
+                  <RequiredAuth>
+                    <ItemUpdatePage/>
                   </RequiredAuth>
                 }/>
               </Route>
