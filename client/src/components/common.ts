@@ -13,6 +13,8 @@ export interface ErrorResponse {
   non_field_errors?: string[]
 }
 
+export const nf = new Intl.NumberFormat()
+
 export function getAxiosErrorDetail(error: any): string {
   const axiosError = error as AxiosError
   if (axiosError.isAxiosError) {

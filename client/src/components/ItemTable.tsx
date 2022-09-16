@@ -1,5 +1,6 @@
 import { Center, IconButton, Table, Tbody, Td, Text, Th, Thead, Tr } from "@chakra-ui/react"
 import { Link } from "react-router-dom"
+import { nf } from "./common"
 import { EditIcon, NextIcon } from "./Icons"
 import { ItemType } from "./items-api"
 
@@ -35,7 +36,7 @@ function ItemTable({ items, isSelection, onSelect: onSelected }: {
           }}>
             <Td>{item.barcode}</Td>
             <Td>{item.name}</Td>
-            <Td>{item.unit_price}</Td>
+            <Td>{nf.format(item.unit_price)}</Td>
             <Td>{item.category}</Td>
             <Td>
               {isSelection

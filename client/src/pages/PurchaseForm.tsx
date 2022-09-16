@@ -1,13 +1,13 @@
 import { Button, Grid, GridItem, HStack, IconButton, Text, useDisclosure, useToast, VStack } from "@chakra-ui/react"
 import { AxiosError } from "axios"
 import { Form, Formik } from "formik"
-import { toNumber } from "lodash"
+import { sum, toNumber } from "lodash"
 import { nanoid } from "nanoid"
 import { Fragment } from "react"
 import { useNavigate } from "react-router-dom"
 import { Asserts, TypeOf } from "yup"
 import BrowseItem from "../components/BrowseItem"
-import { getAxiosErrorDetail } from "../components/common"
+import { getAxiosErrorDetail, nf } from "../components/common"
 import { DateField, StringField } from "../components/FormFields"
 import { AddIcon, DeleteIcon } from "../components/Icons"
 import { purchaseCreateUpdateSchema } from "../components/purchase-api"
@@ -77,7 +77,7 @@ function PurchaseForm({
                   </Text>
                   <Text>
                     <Text as="span" fontWeight="bold">Subtotal{' '}</Text>
-                    <Text as="span">{toNumber(row.quantity) * toNumber(row.unit_price)}</Text>
+                    <Text as="span">{nf.format(toNumber(row.quantity) * toNumber(row.unit_price))}</Text>
                   </Text>
                 </GridItem>
                 <GridItem>
@@ -102,6 +102,12 @@ function PurchaseForm({
           </Grid>
 
           <HStack spacing={2}>
+            <Text>
+              <Text as="span" fontWeight="bold">Total</Text>
+              {' '}
+              {nf.format(sum(values.details!
+                .map(row => toNumber(row.quantity) * toNumber(row.unit_price))))}
+            </Text>
             <Button colorScheme="blue" leftIcon={<AddIcon/>} onClick={() => browseItemDisclosure.onOpen()}>Add Item</Button>
             <Button type="submit" colorScheme="green" isLoading={isSubmitting}>Save</Button>
           </HStack>
