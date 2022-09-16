@@ -1,5 +1,6 @@
 import { AxiosInstance } from "axios"
 import { selector } from "recoil"
+import { object, string, number, Asserts } from "yup"
 import { authAxios } from "./auth"
 import { PagedResponse } from "./common"
 
@@ -18,12 +19,21 @@ export interface ItemCategoryType {
   notes: string
 }
 
+export const itemSchema = object({
+  id: number().optional(),
+  barcode: string().required().max(30),
+  name: string().required().max(200),
+  unit_price: number().min(0),
+  category: string().required(),
+  notes: string().optional(),
+})
+
 export async function getItemList(axios: AxiosInstance, searchParams: URLSearchParams): Promise<PagedResponse<ItemType[]>> {
   const response = await axios.get<PagedResponse<ItemType[]>>(`/inventory/items/?${searchParams.toString()}`)
   return response.data
 }
 
-export async function createItem(axios: AxiosInstance, item: ItemType): Promise<ItemType> {
+export async function createItem(axios: AxiosInstance, item: ItemType | Asserts<typeof itemSchema>): Promise<ItemType> {
   const response = await axios.post<ItemType>('/inventory/items/', item)
   console.log(response.data)
   return response.data
@@ -34,7 +44,7 @@ export async function getItemById(axios: AxiosInstance, id: string | number): Pr
   return response.data
 }
 
-export async function updateItem(axios: AxiosInstance, id: string | number, item: ItemType): Promise<ItemType> {
+export async function updateItem(axios: AxiosInstance, id: string | number, item: ItemType | Asserts<typeof itemSchema>): Promise<ItemType> {
   const response = await axios.put<ItemType>(`/inventory/items/${id}/`, item)
   return response.data
 }

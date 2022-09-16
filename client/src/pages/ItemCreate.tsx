@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail } from "../components/common"
-import { createItem, ItemType } from "../components/items-api"
+import { createItem, itemSchema } from "../components/items-api"
 import { ItemForm } from "./ItemForm"
 
 function ItemCreatePage() {
@@ -32,9 +32,10 @@ function ItemCreatePage() {
             category: '',
             notes: ''
           }}
+          validationSchema={itemSchema}
           onSubmit={async (values, { setErrors }) => {
             try {
-              const savedItem = await createItem(axios, values as ItemType)
+              const savedItem = await createItem(axios, values)
               toast({
                 status: "success",
                 title: "Saving Item successful",

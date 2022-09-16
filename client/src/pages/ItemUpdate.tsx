@@ -7,7 +7,7 @@ import { useNavigate, useParams } from "react-router-dom"
 import { useRecoilValue } from "recoil"
 import { authAxios } from "../components/auth"
 import { getAxiosErrorDetail } from "../components/common"
-import { createItem, getItemById, ItemType, updateItem } from "../components/items-api"
+import { getItemById, itemSchema, ItemType, updateItem } from "../components/items-api"
 import { ItemForm } from "./ItemForm"
 
 function ItemUpdatePage() {
@@ -78,9 +78,10 @@ function ItemUpdatePage() {
       </HStack>
       <Formik
           initialValues={item!}
+          validationSchema={itemSchema}
           onSubmit={async (values, { setErrors }) => {
             try {
-              const savedItem = await updateItem(axios, id!, values as ItemType)
+              const savedItem = await updateItem(axios, id!, values)
               toast({
                 status: "success",
                 title: "Saving Item successful",

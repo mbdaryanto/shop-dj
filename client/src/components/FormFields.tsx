@@ -1,9 +1,8 @@
-import { FormControl, FormErrorMessage, FormLabel, Input, Select } from "@chakra-ui/react"
+import { FormControl, FormErrorMessage, FormLabel, Input, Select, Textarea } from "@chakra-ui/react"
 import { Field, FieldProps } from "formik"
-import { ComponentProps, ReactNode, useEffect } from "react"
-import { selector, useRecoilValue } from "recoil"
-import { authAxios } from "./auth"
-import { getItemCategoryList, itemCategoryList, ItemCategoryType } from "./items-api"
+import { ComponentProps, ReactNode } from "react"
+import { useRecoilValue } from "recoil"
+import { itemCategoryList } from "./items-api"
 
 interface CommonFieldProps extends Omit<ComponentProps<typeof Field>, 'children'> {
   label?: ReactNode
@@ -24,25 +23,19 @@ export const StringField = ({
   </Field>
 )
 
-// interface DropDownFieldProps extends CommonFieldProps {
-//   children: Pick<ComponentProps<typeof Select>, 'children'>
-// }
-
-// export const DropDownField = ({
-//   label, isRequired, children, ...fieldProps
-// }: DropDownFieldProps) => (
-//   <Field {...fieldProps}>
-//     {({ field, meta }: FieldProps<string>) => (
-//       <FormControl isRequired={isRequired} isInvalid={meta.touched && !!meta.error}>
-//         {!!label && <FormLabel>{label}</FormLabel>}
-//         <Select {...field}>
-//           {children}
-//         </Select>
-//         <FormErrorMessage>{meta.error}</FormErrorMessage>
-//       </FormControl>
-//     )}
-//   </Field>
-// )
+export const TextareaField = ({
+  label, isRequired, ...fieldProps
+}: CommonFieldProps) => (
+  <Field {...fieldProps}>
+    {({ field, meta }: FieldProps<string>) => (
+      <FormControl isRequired={isRequired} isInvalid={meta.touched && !!meta.error}>
+        {!!label && <FormLabel>{label}</FormLabel>}
+        <Textarea {...field}/>
+        <FormErrorMessage>{meta.error}</FormErrorMessage>
+      </FormControl>
+    )}
+  </Field>
+)
 
 export function ItemCategoryField({
   label, isRequired, ...fieldProps
