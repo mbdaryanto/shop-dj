@@ -5,3 +5,4 @@ django-filter
 cryptography
 django-rest-knox
 python-decouple
+django-cors-headers

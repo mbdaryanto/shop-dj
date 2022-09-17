@@ -7,7 +7,11 @@
   </head>
   <body>
     <div id="root"></div>
-    {% load static %}
-    <script src="{% static 'dist/main.js' %}"></script>
+    {% if dev_server_url %}
+      <script src="{{ dev_server_url }}"></script>
+    {% else %}
+      {% load static %}
+      <script src="{% static 'dist/main.js' %}"></script>
+    {% endif %}
   </body>
 </html>

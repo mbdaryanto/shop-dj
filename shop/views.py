@@ -1,3 +1,4 @@
+import os
 from django.shortcuts import render
 from django.http import HttpRequest
 from django.contrib.auth import login, models
@@ -9,7 +10,12 @@ from knox.views import LoginView as KnoxLoginView
 
 
 def home(request: HttpRequest):
-    return render(request, 'home.html')
+    context = {}
+    dev_server_url = os.getenv('DEV_SERVER')
+    if dev_server_url is not None:
+        context['dev_server_url'] = dev_server_url
+
+    return render(request, 'home.html', context)
 
 
 class LoginView(KnoxLoginView):

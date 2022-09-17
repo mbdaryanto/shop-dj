@@ -28,6 +28,7 @@ const App = () => (
               <Route index element={
                 <HomePage/>
               } />
+
               <Route path="item">
                 <Route index element={
                   <RequiredAuth>
@@ -45,6 +46,7 @@ const App = () => (
                   </RequiredAuth>
                 }/>
               </Route>
+
               <Route path="purchase">
                 <Route index element={
                   <RequiredAuth>
@@ -62,6 +64,11 @@ const App = () => (
                   </RequiredAuth>
                 }/>
               </Route>
+
+              <Route path="sale">
+
+              </Route>
+
               <Route path="login">
                 <Route index element={<LoginPage />}></Route>
               </Route>

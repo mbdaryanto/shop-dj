@@ -8,6 +8,14 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, 'static/dist')
   },
+  devServer: {
+    static: path.resolve(__dirname, 'static/dist'),
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, PATCH, OPTIONS",
+      "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
+    }
+  },
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
     extensions: [".ts", ".tsx", ".js"]

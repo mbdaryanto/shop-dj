@@ -12,6 +12,9 @@
             "args": [
                 "runserver"
             ],
+            "env": {
+              "DEV_SERVER": "http://localhost:8080/main.js"
+            },
             "django": true,
             "justMyCode": true
         }
