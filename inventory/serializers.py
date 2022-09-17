@@ -1,6 +1,6 @@
 from typing import Dict, Any
 from rest_framework import serializers, exceptions
-from .models import ItemCategory, Item, Purchase, PurchaseD, Sell, SellD
+from .models import ItemCategory, Item, Purchase, PurchaseD, Sales, SalesD
 
 
 class ItemCategorySerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class PurchaseListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Purchase
-        fields = ['id', 'code', 'date']
+        fields = ['id', 'code', 'date', 'supplier']
 
 
 class PurchaseDCreateUpdateSerializer(serializers.ModelSerializer):
@@ -44,7 +44,7 @@ class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Purchase
-        fields = ['id', 'code', 'date', 'details']
+        fields = ['id', 'code', 'date', 'supplier', 'details']
 
     def create(self, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
@@ -103,13 +103,13 @@ class PurchaseRetrieveSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Purchase
-        fields = ['id', 'code', 'date', 'details']
+        fields = ['id', 'code', 'date', 'supplier', 'details']
 
 
-class SellListSerializer(serializers.ModelSerializer):
+class SalesListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Sell
-        fields = ['id', 'code', 'date']
+        model = Sales
+        fields = ['id', 'code', 'date', 'customer']
 
 
 class SellDCreateUpdateSerializer(serializers.ModelSerializer):
@@ -119,24 +119,24 @@ class SellDCreateUpdateSerializer(serializers.ModelSerializer):
     )
 
     class Meta:
-        model = SellD
-        fields = ['id', 'item', 'quantity', 'unit_price',]
+        model = SalesD
+        fields = ['id', 'item', 'item_name', 'quantity', 'unit_price',]
 
 
-class SellCreateUpdateSerializer(serializers.ModelSerializer):
+class SalesCreateUpdateSerializer(serializers.ModelSerializer):
     details = SellDCreateUpdateSerializer(many=True)
     class Meta:
-        model = Sell
-        fields = ['id', 'code', 'date', 'details']
+        model = Sales
+        fields = ['id', 'code', 'date', 'customer', 'details']
 
     def create(self, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
-        sell = Sell.objects.create(**validated_data)
+        sell = Sales.objects.create(**validated_data)
         for row in details_data:
-            SellD.objects.create(sell=sell, **row)
+            SalesD.objects.create(sell=sell, **row)
         return sell
 
-    def update(self, instance: Sell, validated_data: Dict[str, Any]):
+    def update(self, instance: Sales, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
 
         # set remaining validated_data values into instance attribute
@@ -162,7 +162,7 @@ class SellCreateUpdateSerializer(serializers.ModelSerializer):
 
                 sell_d.save()
             else:
-                SellD.objects.create(sell=instance, **row)
+                SalesD.objects.create(sell=instance, **row)
 
         # delete remaining existing_rows
         for sell_d in existing_rows.values():
@@ -176,13 +176,13 @@ class SellDRetriveSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
 
     class Meta:
-        model = SellD
-        fields = ['id', 'item', 'quantity', 'unit_price',]
+        model = SalesD
+        fields = ['id', 'item', 'item_name', 'quantity', 'unit_price',]
 
 
-class SellRetrieveSerializer(serializers.ModelSerializer):
+class SalesRetrieveSerializer(serializers.ModelSerializer):
     details = SellDRetriveSerializer(many=True, read_only=True)
 
     class Meta:
-        model = Sell
-        fields = ['id', 'code', 'date', 'details']
+        model = Sales
+        fields = ['id', 'code', 'date', 'customer', 'details']

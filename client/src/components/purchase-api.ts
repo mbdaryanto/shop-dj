@@ -9,6 +9,7 @@ export interface PurchaseType {
   id?: number
   code: string
   date: string
+  supplier: string
 }
 
 export const purchaseDCreateUpdateSchema = object({
@@ -22,6 +23,7 @@ export const purchaseDCreateUpdateSchema = object({
 export const purchaseCreateUpdateSchema = object({
   code: string().required().max(30),
   date: date().required(),
+  supplier: string().required().max(200),
   details: array().of(purchaseDCreateUpdateSchema).ensure(),
 })
 

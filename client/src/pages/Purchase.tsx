@@ -121,6 +121,7 @@ const PurchaseTable = ({ list }: {
       <Tr>
         <Th>Code</Th>
         <Th>Date</Th>
+        <Th>Supplier</Th>
         <Th></Th>
       </Tr>
     </Thead>
@@ -129,6 +130,7 @@ const PurchaseTable = ({ list }: {
         <Tr key={row.id} _hover={{ bgColor: 'blue.100' }}>
           <Td>{row.code}</Td>
           <Td>{row.date}</Td>
+          <Td>{row.supplier}</Td>
           <Td>
             <IconButton
               aria-label="Update"

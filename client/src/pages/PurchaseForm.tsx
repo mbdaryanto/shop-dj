@@ -65,6 +65,7 @@ function PurchaseForm({
         <VStack as={Form} spacing={4}>
           <StringField name="code" label="Code" isRequired/>
           <DateField name="date" label="Date" isRequired/>
+          <StringField name="supplier" label="Supplier" isRequired/>
 
           <Grid templateColumns="3fr 1fr 2fr 30px" gap={3}>
             {values.details!.map((row, index) => (
