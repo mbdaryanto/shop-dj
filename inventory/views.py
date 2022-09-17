@@ -2,14 +2,14 @@ from rest_framework import generics, permissions, filters
 from rest_framework.response import Response
 import django_filters.rest_framework
 from .models import ItemCategory, Item, Purchase, Sell
-from .serializers import ItemCategorySerializer, ItemSerializer, PurchaseListSerializer, PurchaseRetrieveSerializer, PurchaseCreateUpdateSerializer, SellCreateUpdateSerializer, SellListSerializer, SellRetriveSerializer
+from .serializers import ItemCategorySerializer, ItemSerializer, PurchaseListSerializer, PurchaseRetrieveSerializer, PurchaseCreateUpdateSerializer, SellCreateUpdateSerializer, SellListSerializer, SellRetrieveSerializer
 
 # Create your views here.
 
 class ItemCategoryList(generics.ListCreateAPIView):
     queryset = ItemCategory.objects.all()
     serializer_class = ItemCategorySerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
     filter_backends = [filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
     search_fields = ['name', 'notes']
     filterset_fields = ['name']
@@ -23,7 +23,7 @@ class ItemCategoryDetail(generics.RetrieveUpdateDestroyAPIView):
 class ItemList(generics.ListCreateAPIView):
     queryset = Item.objects.all()
     serializer_class = ItemSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
     filter_backends = [filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
     search_fields = ['barcode', 'name', 'category__name', 'notes']
     filterset_fields = ['barcode', 'name', 'category__name']
@@ -37,7 +37,7 @@ class ItemDetail(generics.RetrieveUpdateDestroyAPIView):
 class PurchaseList(generics.ListCreateAPIView):
     queryset = Purchase.objects.prefetch_related('details')
     # serializer_class = PurchaseCreateUpdateSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
     filter_backends = [filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
     search_fields = ['code', 'date',]
     filterset_fields = ['code', 'date']
@@ -65,7 +65,7 @@ class PurchaseList(generics.ListCreateAPIView):
 class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Purchase.objects.all()
     # serializer_class = PurchaseCreateUpdateSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get_serializer_class(self):
         if self.request.method == "GET":
@@ -81,7 +81,7 @@ class PurchaseDetail(generics.RetrieveUpdateDestroyAPIView):
 class SellList(generics.ListCreateAPIView):
     queryset = Sell.objects.prefetch_related('details')
     # serializer_class = SellCreateUpdateSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
     filter_backends = [filters.SearchFilter, django_filters.rest_framework.DjangoFilterBackend]
     search_fields = ['code', 'date',]
     filterset_fields = ['code', 'date']
@@ -100,11 +100,11 @@ class SellList(generics.ListCreateAPIView):
 class SellDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Sell.objects.all()
     # serializer_class = SellCreateUpdateSerializer
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.IsAuthenticated, )
 
     def get_serializer_class(self):
         if self.request.method == "GET":
-            return SellRetriveSerializer
+            return SellRetrieveSerializer
         return SellCreateUpdateSerializer
 
     # def get(self, request, *args, **kwargs):

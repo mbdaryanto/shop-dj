@@ -11,7 +11,7 @@ class ItemCategorySerializer(serializers.ModelSerializer):
 
 class ItemSerializer(serializers.ModelSerializer):
     category = serializers.SlugRelatedField(
-        slug_field='name', 
+        slug_field='name',
         queryset=ItemCategory.objects.all(),
     )
 
@@ -36,7 +36,7 @@ class PurchaseDCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PurchaseD
-        fields = ['id', 'item', 'quantity', 'unit_price',]        
+        fields = ['id', 'item', 'quantity', 'unit_price',]
 
 
 class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
@@ -49,7 +49,7 @@ class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
     def create(self, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
         purchase = Purchase.objects.create(**validated_data)
-        for row in details_data:            
+        for row in details_data:
             PurchaseD.objects.create(purchase=purchase, **row)
         return purchase
 
@@ -64,9 +64,9 @@ class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
             row.id: row
             for row in PurchaseD.objects.filter(purchase=instance).all()
         }
-        
+
         for row in details_data:
-            if 'id' in row:                
+            if 'id' in row:
                 try:
                     purchase_d = existing_rows.pop(row['id'])
                 except KeyError:
@@ -90,7 +90,7 @@ class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class PurchaseDRetrieveSerializer(serializers.ModelSerializer):
-    
+
     item = ItemSerializer(read_only=True)
 
     class Meta:
@@ -132,7 +132,7 @@ class SellCreateUpdateSerializer(serializers.ModelSerializer):
     def create(self, validated_data: Dict[str, Any]):
         details_data = validated_data.pop('details')
         sell = Sell.objects.create(**validated_data)
-        for row in details_data:            
+        for row in details_data:
             SellD.objects.create(sell=sell, **row)
         return sell
 
@@ -149,7 +149,7 @@ class SellCreateUpdateSerializer(serializers.ModelSerializer):
             for row in instance.details.all()
             # for row in SellD.objects.filter(sell=instance).all()
         }
-        
+
         for row in details_data:
             if 'id' in row:
                 try:
@@ -180,7 +180,7 @@ class SellDRetriveSerializer(serializers.ModelSerializer):
         fields = ['id', 'item', 'quantity', 'unit_price',]
 
 
-class SellRetriveSerializer(serializers.ModelSerializer):
+class SellRetrieveSerializer(serializers.ModelSerializer):
     details = SellDRetriveSerializer(many=True, read_only=True)
 
     class Meta:
