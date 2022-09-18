@@ -40,7 +40,7 @@ class PurchaseDCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class PurchaseCreateUpdateSerializer(serializers.ModelSerializer):
-    details = PurchaseDCreateUpdateSerializer(many=True)
+    details = PurchaseDCreateUpdateSerializer(many=True, allow_empty=False, min_length=1)
 
     class Meta:
         model = Purchase
@@ -124,7 +124,7 @@ class SellDCreateUpdateSerializer(serializers.ModelSerializer):
 
 
 class SalesCreateUpdateSerializer(serializers.ModelSerializer):
-    details = SellDCreateUpdateSerializer(many=True)
+    details = SellDCreateUpdateSerializer(many=True, allow_empty=False, min_length=1)
     class Meta:
         model = Sales
         fields = ['id', 'code', 'date', 'customer', 'details']

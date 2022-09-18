@@ -1,4 +1,6 @@
+from decimal import Decimal
 from django.db import models
+from django.core.validators import MinValueValidator, MinLengthValidator
 
 # Create your models here.
 
@@ -12,8 +14,8 @@ class ItemCategory(models.Model):
 
 class Item(models.Model):
     barcode = models.CharField(max_length=30, unique=True)
-    name = models.CharField(max_length=100)
-    unit_price = models.DecimalField(max_digits=20, decimal_places=2)
+    name = models.CharField(max_length=100, validators=[MinLengthValidator(1)])
+    unit_price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0'))])
     category = models.ForeignKey(ItemCategory, on_delete=models.RESTRICT)
     notes = models.TextField(blank=True)
 
@@ -33,8 +35,8 @@ class Purchase(models.Model):
 class PurchaseD(models.Model):
     purchase = models.ForeignKey(Purchase, related_name='details', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.RESTRICT)
-    quantity = models.DecimalField(max_digits=20, decimal_places=2)
-    unit_price = models.DecimalField(max_digits=20, decimal_places=2)
+    quantity = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0'))])
+    unit_price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0'))])
 
 
 class Sales(models.Model):
@@ -50,5 +52,5 @@ class SalesD(models.Model):
     sales = models.ForeignKey(Sales, related_name='details', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, on_delete=models.RESTRICT, null=True)
     item_name = models.CharField(max_length=100)
-    quantity = models.DecimalField(max_digits=20, decimal_places=2)
-    unit_price = models.DecimalField(max_digits=20, decimal_places=2)
+    quantity = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0'))])
+    unit_price = models.DecimalField(max_digits=20, decimal_places=2, validators=[MinValueValidator(Decimal('0'))])
