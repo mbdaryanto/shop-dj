@@ -16,8 +16,8 @@ export const purchaseDCreateUpdateSchema = object({
   id: number().integer().optional(),
   _id: string().optional(),
   item: itemSchema.required(),
-  quantity: number().required().min(0),
-  unit_price: number().required().min(0),
+  quantity: number().required().label('Quantity').min(0),
+  unit_price: number().required().label('Unit Price').min(0),
 })
 
 export const purchaseCreateUpdateSchema = object({
