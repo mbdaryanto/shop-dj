@@ -44,6 +44,7 @@ class InventoryTest(TestCase):
         self.assertEqual(saved_purchase_ds[0].quantity, 11)
         self.assertEqual(saved_purchase_ds[0].unit_price, 20050)
 
+        # testing empty details
         data = dict(
             code='11113',
             date=timezone.now().date() - timezone.timedelta(days=1),
@@ -56,6 +57,7 @@ class InventoryTest(TestCase):
         # print(repr(serializer.errors))
         # {'details': {'non_field_errors': [ErrorDetail(string='This list may not be empty.', code='empty')]}}
 
+        # testing negative quantity and item_price
         data = dict(
             code='11114',
             date=timezone.now().date() - timezone.timedelta(days=1),
