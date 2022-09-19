@@ -44,6 +44,36 @@ class InventoryTest(TestCase):
         self.assertEqual(saved_purchase_ds[0].quantity, 11)
         self.assertEqual(saved_purchase_ds[0].unit_price, 20050)
 
+        data = dict(
+            code='11113',
+            date=timezone.now().date() - timezone.timedelta(days=1),
+            supplier='supplier test',
+            details=[
+            ]
+        )
+        serializer = PurchaseCreateUpdateSerializer(purchase, data=data)
+        self.assertFalse(serializer.is_valid())
+        # print(repr(serializer.errors))
+        # {'details': {'non_field_errors': [ErrorDetail(string='This list may not be empty.', code='empty')]}}
+
+        data = dict(
+            code='11114',
+            date=timezone.now().date() - timezone.timedelta(days=1),
+            supplier='supplier test',
+            details=[
+                dict(
+                    id=purchase_d.id,
+                    item=item.id,
+                    quantity=-1,
+                    unit_price=-20050,
+                ),
+            ]
+        )
+        serializer = PurchaseCreateUpdateSerializer(purchase, data=data)
+        self.assertFalse(serializer.is_valid())
+        # print(repr(serializer.errors))
+        # {'details': [{'quantity': [ErrorDetail(string='Ensure this value is greater than or equal to 0.', code='min_value')], 'unit_price': [ErrorDetail(string='Ensure this value is greater than or equal to 0.', code='min_value')]}]}
+
 
     def test_sales_serializer(self):
         item = self.item
