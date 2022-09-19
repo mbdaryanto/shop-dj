@@ -66,7 +66,11 @@ const App = () => (
               </Route>
 
               <Route path="sale">
-
+                <Route index element={
+                  <RequiredAuth>
+                    <ComingSoonPage/>
+                  </RequiredAuth>
+                }/>
               </Route>
 
               <Route path="login">
