@@ -1,7 +1,9 @@
 const path = require('path');
+const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-  mode: "development",
+  mode: isDevelopment ? 'development' : 'production',
   devtool: "inline-source-map",
   entry: "./client/src/main.tsx",
   output: {
@@ -9,6 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, 'static/dist')
   },
   devServer: {
+    hot: true,
     static: path.resolve(__dirname, 'static/dist'),
     headers: {
       "Access-Control-Allow-Origin": "*",
@@ -16,6 +19,9 @@ module.exports = {
       "Access-Control-Allow-Headers": "X-Requested-With, content-type, Authorization"
     }
   },
+  plugins: [
+    isDevelopment && new ReactRefreshPlugin(),
+  ].filter(Boolean),
   resolve: {
     // Add `.ts` and `.tsx` as a resolvable extension.
     extensions: [".ts", ".tsx", ".js"]
