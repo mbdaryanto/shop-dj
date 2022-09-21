@@ -66,7 +66,7 @@ function PurchaseForm({
           <StringField name="code" label="Code" isRequired/>
           <DateField name="date" label="Date" isRequired/>
           <StringField name="supplier" label="Supplier" isRequired/>
-
+          <Text textAlign="left" w="100%" fontWeight="semibold">Items Detail</Text>
           <Grid templateColumns="3fr 1fr 2fr 30px" gap={3}>
             {values.details!.map((row, index) => (
               <Fragment key={row.id || row._id}>
